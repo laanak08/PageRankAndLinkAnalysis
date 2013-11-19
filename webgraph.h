@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include "Vertex.h"
+#include "vertex.h"
+#include <vector>
 
 using namespace std;
 

@@ -1,7 +1,8 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "WebGraph.h"
+#include "webgraph.h"
+#include <algorithm>
 
 using namespace std;
 
