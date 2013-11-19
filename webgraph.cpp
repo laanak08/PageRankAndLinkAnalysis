@@ -1,13 +1,13 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "webgraph.h"
+#include "WebGraph.h"
 
 using namespace std;
 
 WebGraph::WebGraph(std::string file)
 {
-	this->graph = new AdjacencyList<int>();
+	this->graph = new vector<Vertex<int>* >();
 
 	string line;
 	ifstream myFile;
@@ -55,3 +55,69 @@ void WebGraph::print_adj_list()
 {
 }
 
+
+
+bool WebGraph::add_vertex(int vertex)
+{
+	Vertex<int> * v = new Vertex<int>(vertex);
+
+	this->graph->push_back(v);
+	++lastFilledIndex;
+
+	if(graph->size() > 1 )
+		sort( this->graph->begin(), this->graph->end() );
+	return true;
+}
+
+
+bool WebGraph::add_edge(int fromVertex, int toVertex)
+{
+
+	// find vertex index
+	int notIndexed = -1;
+	int fromVertexIndex = index_of( fromVertex );
+	int toVertexIndex = index_of( toVertex );
+
+	if( fromVertexIndex == notIndexed ){
+		add_vertex( fromVertex );
+		fromVertexIndex = index_of( fromVertex );
+	}
+
+	if( toVertexIndex == notIndexed ){
+		add_vertex( toVertex);
+		toVertexIndex = index_of( toVertex );
+	}
+	this->graph->at(fromVertexIndex)->add_edge(toVertexIndex);
+	return true;
+}
+
+
+int WebGraph::index_of(int vertex)
+{
+	// binary search
+	int listSize = lastFilledIndex;
+	int notIndexed = -1;
+
+	if( 0 == listSize )
+		return notIndexed;
+
+	// set left and right boundary beyond array bounds
+	int l = 0;
+	int r = listSize-1;
+
+	// stop when l and r converge on the same index
+	while(l <= r) {
+		// check middle of subarray
+		int i = l+((r-l)/2);
+		int midArrayItem = this->graph->at(i)->get_label();
+
+		if( midArrayItem > vertex ){
+			r = i-1;
+		}else if( midArrayItem < vertex ){
+			l = i+1;
+		}else{
+			return i;
+		}
+	}
+	return notIndexed;
+}
